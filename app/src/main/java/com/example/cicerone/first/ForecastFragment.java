@@ -1,6 +1,7 @@
 package com.example.cicerone.first;
 
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -55,7 +57,7 @@ public class ForecastFragment extends Fragment {
         int id = item.getItemId();
         if(id == R.id.action_refresh){
             FetchWeatherTask fwt = new FetchWeatherTask();
-            fwt.execute("67100");
+            fwt.execute("35","139");
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -66,15 +68,7 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Create some dummy data for the ListView.  Here's a sample weekly forecast
-        String[] data = {
-                "Mon 6/23 - Sunny - 31/17",
-                "Tue 6/24 - Foggy - 21/8",
-                "Wed 6/25 - Cloudy - 22/17",
-                "Thurs 6/26 - Rainy - 18/11",
-                "Fri 6/27 - Foggy - 21/10",
-                "Sat 6/28 - TRAPPED IN WEATHERSTATION - 23/18",
-                "Sun 6/29 - Sunny - 20/7"
-        };
+        String[] data = {};
         List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
 
         // Now that we have some dummy forecast data, create an ArrayAdapter.
@@ -87,11 +81,26 @@ public class ForecastFragment extends Fragment {
                         R.id.list_item_forecast_textview, // The ID of the textview to populate.
                         weekForecast);
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         // Get a reference to the ListView, and attach this adapter to it.
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
+        FetchWeatherTask fwt = new FetchWeatherTask();
+        fwt.execute("35","139");
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String text = mForecastAdapter.getItem(i);
+                //Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+
+                // Executed in an Activity, so 'this' is the Context
+                // The fileUrl is a string URL, such as "http://www.example.com/image.png"
+                Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
+                detailIntent.putExtra("DAY_FORECAST", text);
+                startActivity(detailIntent);
+            }
+        });
 
         return rootView;
     }
@@ -117,7 +126,7 @@ public class ForecastFragment extends Fragment {
             // Because the API returns a unix timestamp (measured in seconds),
             // it must be converted to milliseconds in order to be converted to valid date.
             java.util.Date date = new java.util.Date(time * 1000);
-            SimpleDateFormat format = new SimpleDateFormat("E, MMM d");
+            SimpleDateFormat format = new SimpleDateFormat("E d MMM");
             return format.format(date).toString();
         }
 
@@ -203,19 +212,22 @@ public class ForecastFragment extends Fragment {
             String format = "json";
             String units = "metric";
             int numDays = 7;
-
+            for (String param : params)
+            {Log.v(LOG_TAG, param);}
 
 
             try {
 
                 final String FORECAST_BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?";
-                final String QUERY_PARAM = "q";
+                final String LAT_PARAM = "lat";
+                final String LON_PARAM = "lon";
                 final String FORMAT_PARAM = "mode";
                 final String UNITS_PARAM = "units";
                 final String DAYS_PARAM = "cnt";
 
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                        .appendQueryParameter(QUERY_PARAM,params[0])
+                        .appendQueryParameter(LAT_PARAM,params[0])
+                        .appendQueryParameter(LON_PARAM,params[1])
                         .appendQueryParameter(FORMAT_PARAM,format)
                         .appendQueryParameter(UNITS_PARAM,units)
                         .appendQueryParameter(DAYS_PARAM,Integer.toString(numDays))
