@@ -2,9 +2,11 @@ package com.example.cicerone.first;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,15 +54,28 @@ public class ForecastFragment extends Fragment {
         inflater.inflate(R.menu.forecastfragment,menu);
     }
 
+    public void goWeather(){
+        FetchWeatherTask fwt = new FetchWeatherTask();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String lat = prefs.getString(getString(R.string.pref_latitude_key),getString(R.string.pref_latitude_default));
+        String lon = prefs.getString(getString(R.string.pref_longitude_key),getString(R.string.pref_longitude_default));
+        fwt.execute(lat,lon);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.action_refresh){
-            FetchWeatherTask fwt = new FetchWeatherTask();
-            fwt.execute("35","139");
+            goWeather();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        goWeather();
     }
 
     @Override
@@ -86,8 +101,6 @@ public class ForecastFragment extends Fragment {
         // Get a reference to the ListView, and attach this adapter to it.
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
-        FetchWeatherTask fwt = new FetchWeatherTask();
-        fwt.execute("35","139");
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -134,10 +147,19 @@ public class ForecastFragment extends Fragment {
          * Prepare the weather high/lows for presentation.
          */
         private String formatHighLows(double high, double low) {
+            //check if the unit is imperial
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String unit = prefs.getString(getString(R.string.pref_unit_key),getString(R.string.pref_unit_default));
+            if (unit.equals(getString(R.string.pref_units_imperial))){
+                high = (high * 1.8) + 32;
+                low = (low * 1.8) +32;
+            }else if(!unit.equals(getString(R.string.pref_units_metric))){
+                Log.e(LOG_TAG,"Unit not found");
+            }
+
             // For presentation, assume the user doesn't care about tenths of a degree.
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
-
             String highLowStr = roundedHigh + "/" + roundedLow;
             return highLowStr;
         }

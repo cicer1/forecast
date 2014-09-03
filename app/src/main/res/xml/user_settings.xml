@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="@string/pref_unit_key"
+        android:title="Temperature Unit"
+        android:entries="@array/tempUnit"
+        android:entryValues="@array/tempUnitValues"
+        android:defaultValue="@string/pref_unit_default"
+        />
+    <PreferenceCategory android:title="Location Settings" >
+        <EditTextPreference
+            android:title="@string/pref_latitude_label"
+            android:key="@string/pref_latitude_key"
+            android:defaultValue="@string/pref_latitude_default"
+            android:inputType="number"
+            />
+        <EditTextPreference
+            android:title="@string/pref_longitude_label"
+            android:key="@string/pref_longitude_key"
+            android:defaultValue="@string/pref_longitude_default"
+            android:inputType="number"/>
+    </PreferenceCategory>
+</PreferenceScreen>
