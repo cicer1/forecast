@@ -185,6 +185,7 @@ public class ForecastFragment extends Fragment {
             final String OWM_MIN = "min";
             final String OWM_DATETIME = "dt";
             final String OWM_DESCRIPTION = "main";
+            final String OWM_ICON = "icon";
 
             JSONObject forecastJson = new JSONObject(forecastJsonStr);
             JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
@@ -207,6 +208,9 @@ public class ForecastFragment extends Fragment {
                 // description is in a child array called "weather", which is 1 element long.
                 JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
                 weather.setDescription(weatherObject.getString(OWM_DESCRIPTION));
+
+                JSONObject IconObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
+                weather.setImage(IconObject.getString(OWM_ICON));
 
                 // Temperatures are in a child object called "temp".  Try not to name variables
                 // "temp" when working with temperature.  It confuses everybody.

@@ -2,17 +2,19 @@ package com.example.cicerone.first.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cicerone.first.Domain.Weather;
 import com.example.cicerone.first.R;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Created by francesco on 04/09/14.
@@ -79,9 +81,17 @@ public class ItemAdapter extends BaseAdapter {
             vi = ItemAdapter._inflater.inflate(R.layout.list_item_forecast, null);
         }
 
-        TextView title =(TextView) vi.findViewById(R.id.list_item_forecast_textview);
+        TextView title =(TextView) vi.findViewById(R.id.textViewWeatherDate);
+        TextView description = (TextView) vi.findViewById(R.id.textViewWeatherDescription);
+        ImageView icon = (ImageView) vi.findViewById(R.id.imageViewDescription);
 
-        title.setText(this._items.get(position).getDatetime() + ": " + this._items.get(position).getDescription());
+        title.setText(this._items.get(position).getDatetime());
+        description.setText(this._items.get(position).getDescription());
+
+        int resID = vi.getResources().getIdentifier(this._items.get(position).getImage(), "drawable",  vi.getContext().getPackageName());
+        icon.setImageResource(resID);
+
+
 
         return vi;
     }
