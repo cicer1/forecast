@@ -16,6 +16,8 @@ public class Weather {
     private String max;
     private String min;
     private String datetime;
+    private String pressure;
+    private String humidity;
     private String description;
 
     private static HashMap<String,String> icon;
@@ -87,5 +89,13 @@ public class Weather {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getHumidity() { return humidity; }
+
+    public void setHumidity(String humidity) { this.humidity = humidity; }
+
+    public String getPressure() { return pressure; }
+
+    public void setPressure(String pressure) { this.pressure = pressure; }
 
 }
