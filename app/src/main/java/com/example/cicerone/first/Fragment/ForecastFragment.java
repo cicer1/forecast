@@ -27,7 +27,7 @@ import com.example.cicerone.first.R;
  */
 public class ForecastFragment extends Fragment {
 
-    private ItemAdapter mForecastAdapter;
+    private ItemAdapter _mForecastAdapter;
 
 
     public ForecastFragment() {
@@ -45,7 +45,7 @@ public class ForecastFragment extends Fragment {
     }
 
     public void goWeather(){
-        AFetchWeatherTask fwt = (new FetchWeatherTaskFactory()).makeFetchWeatherTask(false,mForecastAdapter);
+        AFetchWeatherTask fwt = FetchWeatherTaskFactory.getInstance().makeFetchWeatherTask(false,_mForecastAdapter);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String lat = prefs.getString(getString(R.string.pref_latitude_key),getString(R.string.pref_latitude_default));
         String lon = prefs.getString(getString(R.string.pref_longitude_key),getString(R.string.pref_longitude_default));
@@ -73,28 +73,28 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
 
 
-        // The ArrayAdapter will take data from a source (like json) and
-        // use it to populate the ListView it's attached to.
-        mForecastAdapter =
+        /* The ArrayAdapter will take data from a source (like json) and
+           use it to populate the ListView it's attached to.*/
+        _mForecastAdapter =
                 new ItemAdapter(
                         getActivity()
                          );
 
         final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        // Get a reference to the ListView, and attach this adapter to it.
+        /* Get a reference to the ListView, and attach this adapter to it. */
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
-        listView.setAdapter(mForecastAdapter);
+        listView.setAdapter(_mForecastAdapter);
 
         this.goWeather();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Weather weather = (Weather)mForecastAdapter.getItem(i);
+                Weather weather = (Weather)_mForecastAdapter.getItem(i);
 
-                // Executed in an Activity, so 'this' is the Context
-                // The fileUrl is a string URL, such as "http://www.example.com/image.png"
+                /* Executed in an Activity, so 'this' is the Context
+                   The fileUrl is a string URL, such as "http://www.example.com/image.png"*/
                 Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
                 detailIntent.putExtra("DAY_FORECAST", weather.getDatetime()+" : "+weather.getDescription());
                 startActivity(detailIntent);

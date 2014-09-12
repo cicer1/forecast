@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.cicerone.first.Fragment.ForecastFragment;
 import com.example.cicerone.first.R;
 
 

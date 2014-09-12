@@ -17,6 +17,8 @@ public abstract class AFetchWeatherTask extends AsyncTask<Object, Void, Weather[
 
     protected final String LOG_TAG = AFetchWeatherTask.class.getSimpleName();
     protected ItemAdapter adapter;
+    protected static String _format = "json";
+    protected static String _units = "metric";
 
     /**
      *
@@ -39,8 +41,8 @@ public abstract class AFetchWeatherTask extends AsyncTask<Object, Void, Weather[
     protected void onPostExecute(Weather[] result) {
         if (result!=null){
             this.adapter.clear();
-            for (Weather singleDay : result){
-                this.adapter.addItem(singleDay);
+            for (Weather singleEntry : result){
+                this.adapter.addItem(singleEntry);
             }
             /* Ehi! I'm changed */
             this.adapter.notifyDataSetChanged();
@@ -54,11 +56,16 @@ public abstract class AFetchWeatherTask extends AsyncTask<Object, Void, Weather[
      * @param time
      * @return
      */
-    protected String getReadableDateString(long time){
+    protected String getReadableDateString(long time, Boolean hhmm){
         /*Because the API returns a unix timestamp (measured in seconds),
           it must be converted to milliseconds in order to be converted to valid date.*/
         java.util.Date date = new java.util.Date(time * 1000);
-        SimpleDateFormat format = new SimpleDateFormat("E d MMM");
+        SimpleDateFormat format;
+        if (!hhmm)
+            format = new SimpleDateFormat("E d MMM");
+        else
+            format = new SimpleDateFormat("E d MMM hh:mm aaa");
+
         return format.format(date).toString();
     }
 

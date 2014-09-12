@@ -22,9 +22,8 @@ import java.net.URL;
  */
 public class FetchReducedWeatherTask extends AFetchWeatherTask {
 
-    private String format = "json";
-    private String units = "metric";
-    private int numDays = 7;
+
+    private static int _numDays = 7;
 
     /**
      * Constructor
@@ -49,13 +48,8 @@ public class FetchReducedWeatherTask extends AFetchWeatherTask {
         /* These are the names of the JSON objects that need to be extracted. */
         final String OWM_LIST = "list";
         final String OWM_WEATHER = "weather";
-        final String OWM_TEMPERATURE = "temp";
-        final String OWM_MAX = "max";
-        final String OWM_MIN = "min";
         final String OWM_DATETIME = "dt";
         final String OWM_DESCRIPTION = "main";
-        final String OWM_PRESSURE = "pressure";
-        final String OWM_HUMIDITY = "humidity";
         final String OWM_ICON = "icon";
 
         JSONObject forecastJson = new JSONObject(forecastJsonStr);
@@ -74,7 +68,7 @@ public class FetchReducedWeatherTask extends AFetchWeatherTask {
                into something human-readable, since most people won't read "1400356800" as
                "this saturday". */
             long dateTime = dayForecast.getLong(OWM_DATETIME);
-            weather.setDatetime(getReadableDateString(dateTime));
+            weather.setDatetime(getReadableDateString(dateTime,false));
 
             /* description is in a child array called "weather", which is 1 element long. */
             JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
@@ -84,19 +78,6 @@ public class FetchReducedWeatherTask extends AFetchWeatherTask {
             JSONObject IconObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
             weather.setImage(IconObject.getString(OWM_ICON));
 
-            /* Temperatures are in a child object called "temp".  Try not to name variables
-               "temp" when working with temperature.  It confuses everybody.*/
-            JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
-            weather.setMax(String.valueOf(temperatureObject.getDouble(OWM_MAX)));
-            weather.setMin(String.valueOf(temperatureObject.getDouble(OWM_MIN)));
-
-            //pressure
-            weather.setPressure(String.valueOf(dayForecast.getDouble(OWM_PRESSURE)));
-
-            //humidity
-            weather.setHumidity(String.valueOf(dayForecast.getDouble(OWM_HUMIDITY)));
-
-            //highAndLow = formatHighLows(high, low);
             result_data[i] = weather;
 
         }
@@ -136,9 +117,9 @@ public class FetchReducedWeatherTask extends AFetchWeatherTask {
             Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                     .appendQueryParameter(LAT_PARAM,String.valueOf(params[0]))
                     .appendQueryParameter(LON_PARAM,String.valueOf(params[1]))
-                    .appendQueryParameter(FORMAT_PARAM, format)
-                    .appendQueryParameter(UNITS_PARAM, units)
-                    .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
+                    .appendQueryParameter(FORMAT_PARAM, FetchReducedWeatherTask._format)
+                    .appendQueryParameter(UNITS_PARAM, FetchReducedWeatherTask._units)
+                    .appendQueryParameter(DAYS_PARAM, Integer.toString(FetchReducedWeatherTask._numDays))
                     .build();
 
             URL url = new URL(builtUri.toString());
@@ -188,7 +169,7 @@ public class FetchReducedWeatherTask extends AFetchWeatherTask {
             }
         }
         try {
-            return getWeatherDataFromJson(forecastJsonStr, numDays);
+            return getWeatherDataFromJson(forecastJsonStr, FetchReducedWeatherTask._numDays);
         } catch (JSONException e) {
             e.printStackTrace();
         }
