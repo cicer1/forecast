@@ -1,10 +1,12 @@
-package com.example.cicerone.first;
+package com.example.cicerone.first.Activity;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+
+import com.example.cicerone.first.R;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings.

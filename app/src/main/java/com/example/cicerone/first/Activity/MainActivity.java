@@ -1,4 +1,4 @@
-package com.example.cicerone.first;
+package com.example.cicerone.first.Activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +11,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.cicerone.first.Fragment.ForecastFragment;
+import com.example.cicerone.first.R;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -20,7 +23,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment())
+                    .add(R.id.container, new DetailActivity.PlaceholderFragment())
                     .commit();
         }
     }

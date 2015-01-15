@@ -1,4 +1,4 @@
-package com.example.cicerone.first;
+package com.example.cicerone.first.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.cicerone.first.Fragment.ForecastFragment;
+import com.example.cicerone.first.R;
 
 
 public class DetailActivity extends ActionBarActivity {

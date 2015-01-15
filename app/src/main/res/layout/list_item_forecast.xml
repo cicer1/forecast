@@ -1,12 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TextView
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:minHeight="?android:attr/listPreferredItemHeight"
-    android:gravity="center_vertical"
-    android:id="@+id/list_item_forecast_textview"
-    android:text="@string/list_item_element"
-    >
-</TextView>
+    android:weightSum="1">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:id="@+id/imageViewDescription"
+        android:layout_weight="0.85" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="270dp"
+            android:layout_height="50dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+            android:id="@+id/textViewWeatherDate"
+            android:textAlignment="center"
+            android:singleLine="false"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="270dp"
+            android:layout_height="50dp"
+            android:text="New Text"
+            android:id="@+id/textViewWeatherDescription"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center_horizontal" />
+    </LinearLayout>
+
+</LinearLayout>
